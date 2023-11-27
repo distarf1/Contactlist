@@ -1,0 +1,113 @@
+{% extends 'contacts/index.html' %}
+{% load static %}
+{% block content %}
+    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda con Django</title>
+</head>
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #000000; 
+        margin: 5;
+        padding: 5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    form {
+       background-color: #ffffff;
+       padding: 20px;
+       border-radius: 8px;
+       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+       max-width: 700px;
+       width: 100%;
+       box-sizing: border-box;
+       border: 2px solid #000000; /* Agregando el borde */
+    }
+
+
+    h3 {
+        text-align: center;
+        color: #ffffff;
+    }
+
+    /* Estilo para los campos del formulario */
+    input, select, textarea {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+    }
+
+
+    .btn-container {
+        display: flex;
+        justify-content: center; /* Centra horizontalmente */
+        align-items: center; /* Centra verticalmente */
+        margin-top: 20px; /* Espaciado superior para separar del formulario */
+    }
+
+    .btn-primary {
+        background-color: #6259b6;
+        color: #ffffff;
+        border: 2px solid #000000;
+        text-decoration: none;
+        font-size: 16px; /* Aumenta el tamaño de la letra */
+        padding: 10px 20px; /* Ajusta el padding para un botón más grande */
+        display: inline-block;
+        border-radius: 4px;
+    }
+
+    .btn-primary:hover {
+        background-color: #3727c0;
+        color: #ffffff;
+        border: 2px solid #000000;
+        text-decoration: none;
+        font-size: 16px;
+    }
+
+    .btn-container .btn-primary + .btn-primary {
+        margin-left: 10px; 
+    }
+</style>
+<body>
+    <div class="mt-5">
+        <h3>
+            {% if contact %}
+            Editar
+            {% else %}
+            Nuevo
+            {% endif %}
+            contacto
+        </h3>
+    </div>
+    <form action="" method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+
+        {{ form }}
+
+        <div class="btn-container">
+            <a href="{% url 'contact_list' %}" class="btn btn-primary">
+                Cancelar
+            </a>
+            <button class="btn btn-primary">
+                {% if contact %}
+                Actualizar
+                {% else %}
+                Crear
+                {% endif %}
+                contacto
+            </button>
+        </div>
+    </form>
+</body>
+</html>
+
+{% endblock content %}

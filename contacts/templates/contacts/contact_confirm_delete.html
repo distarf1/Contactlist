@@ -1,0 +1,103 @@
+{% extends 'contacts/index.html' %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda con Django</title>
+    <link rel="stylesheet" href="{% static 'path/to/your/custom.css' %}">
+</head>
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #000000; 
+        margin: 5;
+        padding: 5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        color: #000000;
+    }
+
+    h3 {
+        text-align: center;
+        color: white;
+    }
+
+    .alert-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+    }
+
+    .alert {
+        background-color: #ffffff; /* Morado */
+        border: 2px solid #ffffff; /* Borde blanco */
+        padding: 20px;
+        border-radius: 8px;
+        max-width: 320px;
+        max-height: 320px;
+        text-align: center;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        margin-right: 5px;
+        font-size: 16px;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 4px;
+    }
+
+    .btn-primary {
+        background-color: #6259b6;
+        color: #ffffff;
+        border: 2px solid #000000;
+        text-decoration: none;
+        font-size: 16px;
+        padding: 10px 20px;
+        display: inline-block;
+        border-radius: 4px;
+    }
+
+    .btn-primary:hover {
+        background-color: #3727c0;
+        color: #ffffff;
+        border: 2px solid #000000;
+        text-decoration: none;
+        font-size: 16px;
+    }
+
+</style>
+<body>
+    <div>
+        <h3>Eliminar contacto</h3>
+    </div>
+    
+    <div class="alert-container">
+        <div class="alert">
+            ¿Estás seguro de eliminar el contacto
+            <span class="fw-bold">{{ contact.email }}</span>?
+        
+            <form method="post" class="mt-3">
+                {% csrf_token %}
+                <br>
+                <a href="{% url 'contact_list' %}" class="btn btn-primary">
+                    Cancelar 
+                </a>
+                <button class="btn btn-primary">
+                    Sí, eliminar
+                </button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+
+{% endblock content %}

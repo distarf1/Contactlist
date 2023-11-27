@@ -1,0 +1,289 @@
+{% extends 'contacts/index.html' %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda con Django</title>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #000000; 
+            margin: 2%;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h2, h3, .btn {
+            color: #ffffff;
+        }
+
+        .table-responsive {
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            color: #ffffff; 
+            
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #9b59b6;
+            color: white;
+        }
+
+        .text-end {
+            margin-top: 10px;
+            color: white;
+        }
+
+        .d-flex {
+            margin-top: 10px;
+        }
+
+        .d-none {
+            color: white;
+        }
+
+        .text-body {
+            color: white;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 6px 12px;
+            margin-bottom: 0;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            cursor: pointer;
+            background-image: none;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        .form-container {
+            display: flex;
+        }
+
+        .form-control {
+            width: calc(60% - 10px); 
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        .btn-primary {
+            background-color: #6259b6;
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+           background-color: #6259b6;
+           color: #ffffff;
+           border: 2px solid #ffffff;
+           text-decoration: none;
+           font-size: 14px; 
+       }
+
+        .btn-primary:hover {
+           background-color: #3727c0;
+           color: #ffffff;
+           border: 2px solid #ffffff;
+           text-decoration: none;
+           font-size: 14px; 
+        }
+
+        .pagination {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    
+        .page-item {
+            margin: 0 5px;
+            display: inline-block;
+        }
+    
+        .page-link {
+            color: #ffffff;
+            background-color: #6259b6;
+            border: 2px solid #ffffff;
+            padding: 6px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    
+        .page-link:hover {
+            background-color: #3727c0;
+        }
+    
+        .page-item.disabled .page-link {
+            background-color: #ccc;
+            color: #777;
+            cursor: not-allowed;
+        }
+    
+        .page-item.active .page-link {
+            background-color: #3727c0;
+            border: 2px solid #ffffff;
+        }
+    </style>
+</head>
+<body> 
+
+    <div>
+        <br>
+        <h2 style="color:#fff">Mis contactos</h2>
+
+        <div>
+            <form action="">
+                <div class="form-container">
+                    <input type="text" class="form-control" placeholder="Buscar por nombre" 
+                                name="q" value="{{ request.GET.q }}">
+                    <button class="btn btn-primary">
+                        Buscar
+                    </button>
+                </div>
+                
+            </form>
+        </div>
+        <br>
+        <a href="{% url 'contact_new' %}" class="btn btn-primary">
+            REGISTRAR NUEVO CONTACTO
+        </a> 
+    </div>
+    <br>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Nombre</th>
+                    <th>Apellidos</th>
+                    <th>Email</th>
+                    <th>Fecha de nacimiento</th>
+                    <th>Teléfono</th>
+                    <th>Fecha de registro</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for contact in object_list %}
+                <tr>
+                    <td>
+                        <div>
+                            {% if contact.avatar %}
+                            <img src="{{ contact.avatar.url }}" alt="avatar" class="rounded" 
+                                     style="max-width: 64px">
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td>{{ contact.nombre|default:'-' }}</td>
+                    <td>{{ contact.apellidos|default:'-' }}</td>
+                    <td>{{ contact.email|default:'-' }}</td>
+                    <td>{{ contact.fechanacimiento|default:'-' }}</td>
+                    <td>{{ contact.telefono|default:'-' }}</td>
+                    <td>{{ contact.created|date:'d/m/Y h:i A' }}</td>
+                    <td>
+                        <div>
+                            <a href="{% url 'contact_edit' contact.pk %}" class="btn btn-primary">Editar</a>
+                            <a href="{% url 'contact_delete' contact.pk %}" class="btn btn-primary">Eliminar</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <br>
+    
+    <center>
+    <div class="text-end mb-5">
+        {{ page_obj.paginator.count }} resultado{{ page_obj.paginator.count|pluralize }}
+    </div>
+    <div class="d-flex justify-content-between align-items-center">
+        <small class="d-none d-sm-inline-block text-body">
+            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+        </small>
+        <br><br> 
+    </center>
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="{% url 'contact_list' %}?page={{ page_obj.previous_page_number }}"
+                           aria-label="Anterior">
+                            <span aria-hidden="true">
+                                <<
+                            </span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" aria-label="Anterior">
+                            <span aria-hidden="true">
+                                <<
+                            </span>
+                        </a>
+                    </li>
+                {% endif %}
+    
+                {% for page in page_obj.adjusted_elided_pages %}
+                    <li class="page-item {% if page_obj.number == page %}active{% endif %}">
+                        <a class="page-link" href="{% url 'contact_list' %}?page={{ page }}">
+                            {{ page }}
+                        </a>
+                    </li>
+                {% endfor %}
+    
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{% url 'contact_list' %}?page={{ page_obj.next_page_number }}"
+                           aria-label="Siguiente">
+                            <span aria-hidden="true">
+                                >>
+                            </span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" aria-label="Siguiente">
+                            <span aria-hidden="true">
+                                >>
+                            </span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</body>
+</html>
+
+{% endblock content %}
